@@ -1,4 +1,2 @@
 streamlit
-qiskit
-qiskit-ibmq-provider
-
+qiskit-aer
