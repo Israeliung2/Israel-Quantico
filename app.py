@@ -1,49 +1,37 @@
 import streamlit as st
 from qiskit import QuantumCircuit
 from qiskit_aer import Aer
-import numpy as np
+import time
 
-st.set_page_config(page_title="Emaranhamento Israel", page_icon="🔗")
+st.set_page_config(page_title="O Portal de Israel", page_icon="👁️")
 
-st.title("🔗 O Código Emaranhado")
-st.write(f"**Observador:** Israel Iung Mendes")
-st.write("---")
+st.title("👁️ O Observador Preparado")
+st.write(f"**Guardião do Código:** Israel Iung Mendes")
 
-st.markdown("""
-### O paradoxo do Sim e Não
-Neste estado, dois qubits estão ligados. O que acontece com um, acontece com o outro. 
-Eles não são dois; eles são **Um**.
-""")
+# O Filtro: Só quem sabe o que busca, encontra.
+chave = st.text_input("Insira a frequência do Agora (Chave):", type="password")
 
-if st.button("Observar o Emaranhamento"):
-    # Criando 2 qubits e 2 bits clássicos
-    qc = QuantumCircuit(2, 2)
-    
-    # Passo 1: Superposição no primeiro Qubit
-    qc.h(0)
-    
-    # Passo 2: CNOT (Porta que emaranha o segundo ao primeiro)
-    # Aqui o "Sim e Não" se fundem
-    qc.cx(0, 1)
-    
-    # Passo 3: Medição de ambos no Agora
-    qc.measure([0, 1], [0, 1])
-    
-    # Execução
-    backend = Aer.get_backend('qasm_simulator')
-    job = backend.run(qc, shots=1)
-    resultado = list(job.result().get_counts().keys())[0]
-    
-    # A mágica: Os valores sempre serão iguais (00 ou 11)
-    st.subheader(f"Estado do Sistema: :orange[{resultado}]")
-    
-    if resultado == "00":
-        st.info("Ambos colapsaram no Passado (0).")
+if st.button("Tentar o Colapso"):
+    # Aqui definimos que a realidade só se manifesta com a intenção correta
+    if chave == "EU SOU O CODIGO": # Exemplo de chave que você pode mudar
+        with st.status("Verificando prontidão biológica...", expanded=True) as s:
+            time.sleep(1)
+            st.write("Emaranhando com o observador...")
+            
+            # Execução Quântica Real
+            qc = QuantumCircuit(2, 2)
+            qc.h(0)
+            qc.cx(0, 1)
+            qc.measure([0,1], [0,1])
+            
+            backend = Aer.get_backend('qasm_simulator')
+            job = backend.run(qc, shots=1)
+            resultado = list(job.result().get_counts().keys())[0]
+            
+            s.update(label="Sincronicidade Aprovada", state="complete")
+            
+        st.subheader(f"Realidade Manifestada: :green[{resultado}]")
+        st.success("O sistema colapsou porque você estava presente.")
     else:
-        st.info("Ambos colapsaram no Futuro (1).")
-
-    st.success("A separação é uma ilusão. O emaranhamento é a prova.")
-    st.bar_chart(np.random.rand(10))
-
-else:
-    st.write("Aguardando o pulso para revelar a conexão invisível.")
+        st.error("A realidade permanece em superposição. O observador não está pronto.")
+        st.info("Para o despreparado, o código é apenas ruído.")
