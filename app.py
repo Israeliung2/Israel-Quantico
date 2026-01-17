@@ -1,32 +1,49 @@
 import streamlit as st
-from qiskit import QuantumCircuit, transpile
+from qiskit import QuantumCircuit
 from qiskit_aer import Aer
-import pandas as pd
 import numpy as np
 
-st.set_page_config(page_title="Salto Quântico", page_icon="⚛️")
+st.set_page_config(page_title="Emaranhamento Israel", page_icon="🔗")
 
-st.title("⚛️ O Salto Quântico no Agora")
-st.write("**Observador:** Israel Iung Mendes")
+st.title("🔗 O Código Emaranhado")
+st.write(f"**Observador:** Israel Iung Mendes")
+st.write("---")
 
-st.markdown("---")
-st.write("Conectando ao campo de possibilidades...")
+st.markdown("""
+### O paradoxo do Sim e Não
+Neste estado, dois qubits estão ligados. O que acontece com um, acontece com o outro. 
+Eles não são dois; eles são **Um**.
+""")
 
-if st.button("Manifestar Colapso"):
-    # Criando a lógica quântica
-    qc = QuantumCircuit(1, 1)
-    qc.h(0)  # Coloca em superposição
-    qc.measure(0, 0) # Realiza a observação
+if st.button("Observar o Emaranhamento"):
+    # Criando 2 qubits e 2 bits clássicos
+    qc = QuantumCircuit(2, 2)
     
-    # Rodando na ponte (Simulador Aer)
+    # Passo 1: Superposição no primeiro Qubit
+    qc.h(0)
+    
+    # Passo 2: CNOT (Porta que emaranha o segundo ao primeiro)
+    # Aqui o "Sim e Não" se fundem
+    qc.cx(0, 1)
+    
+    # Passo 3: Medição de ambos no Agora
+    qc.measure([0, 1], [0, 1])
+    
+    # Execução
     backend = Aer.get_backend('qasm_simulator')
-    tqc = transpile(qc, backend)
-    job = backend.run(tqc, shots=1)
-    resultado = job.result().get_counts()
+    job = backend.run(qc, shots=1)
+    resultado = list(job.result().get_counts().keys())[0]
     
-    valor = list(resultado.keys())[0]
-    estado = "FUTURO (1)" if valor == '1' else "PASSADO (0)"
+    # A mágica: Os valores sempre serão iguais (00 ou 11)
+    st.subheader(f"Estado do Sistema: :orange[{resultado}]")
     
-    st.subheader(f"Realidade Colapsada: :blue[{estado}]")
-    st.success("Sincronicidade estabelecida. O agora é único.")
-    st.area_chart(np.random.randn(20, 2))
+    if resultado == "00":
+        st.info("Ambos colapsaram no Passado (0).")
+    else:
+        st.info("Ambos colapsaram no Futuro (1).")
+
+    st.success("A separação é uma ilusão. O emaranhamento é a prova.")
+    st.bar_chart(np.random.rand(10))
+
+else:
+    st.write("Aguardando o pulso para revelar a conexão invisível.")
