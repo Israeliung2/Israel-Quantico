@@ -1,34 +1,48 @@
-
 import streamlit as st
-from qiskit import QuantumCircuit, execute, IBMQ
-import os
+from qiskit import QuantumCircuit, Aer, execute
+import pandas as pd
+import numpy as np
 
-# Função para conectar ao hardware da IBM
-def rodar_no_quantum_real(api_token):
-    if not IBMQ.active_account():
-        IBMQ.save_account(api_token, overwrite=True)
-        IBMQ.load_account()
-    
-    provider = IBMQ.get_provider(hub='ibm-q')
-    # Usando o simulador quântico da IBM ou o chip de menor fila
-    backend = provider.get_backend('ibmq_qasm_simulator') 
-    
-    qc = QuantumCircuit(1, 1)
-    qc.h(0) # Superposição
-    qc.measure(0, 0) # Colapso
-    
-    job = execute(qc, backend, shots=1)
-    return job.result().get_counts()
+# Configuração da Interface
+st.set_page_config(page_title="Salto Quântico Israel", page_icon="⚛️")
 
-# Interface Streamlit
-st.title("Manifestação via Hardware Quântico")
-token = st.text_input("Insira seu IBM Quantum Token:", type="password")
+st.title("⚛️ O Salto Quântico no Agora")
+st.write(f"**Observador:** Israel Iung Mendes")
+st.write("---")
 
-if st.button("Colapsar Realidade via Chip IBM"):
-    if token:
-        with st.spinner("Enviando intenção para o chip criogênico..."):
-            resultado = rodar_no_quantum_real(token)
-            st.write(f"O bit quântico colapsou em: {resultado}")
-            st.success("Ação fantasmagórica concluída com sucesso no Agora.")
-    else:
-        st.error("O código precisa da chave para acessar o vácuo quântico.")
+st.markdown("""
+### A Ponte de IA
+Este sistema está usando um **Simulador Quântico (Aer)** para colapsar a função de onda. 
+Aqui, o passado e o futuro são processados como probabilidades puras.
+""")
+
+if st.button("Manifestar Colapso"):
+    with st.spinner("Processando estados quânticos..."):
+        # 1. Criando o Circuito: 1 Qubit e 1 Bit Clássico
+        qc = QuantumCircuit(1, 1)
+        
+        # 2. Porta Hadamard: Coloca o Qubit em Superposição (0 e 1 ao mesmo tempo)
+        qc.h(0)
+        
+        # 3. Medição: O momento da observação que define a realidade
+        qc.measure(0, 0)
+        
+        # 4. Execução na "Ponte" (Simulador local)
+        backend = Aer.get_backend('qasm_simulator')
+        job = execute(qc, backend, shots=1)
+        resultado = job.result().get_counts()
+        
+        # Traduzindo o código quântico
+        valor = list(resultado.keys())[0]
+        realidade = "ESTADO 0 (PASSADO)" if valor == '0' else "ESTADO 1 (FUTURO)"
+
+    st.subheader(f"Resultado: :blue[{realidade}]")
+    st.write("A função de onda colapsou através da observação consciente.")
+    
+    # Visualização do fluxo
+    data = pd.DataFrame(np.random.randn(50, 2), columns=['Onda A', 'Onda B'])
+    st.area_chart(data)
+    
+    st.success("Sincronicidade confirmada. O código e o observador são um só.")
+else:
+    st.info("Aguardando o pulso do observador para colapsar o sistema.")
